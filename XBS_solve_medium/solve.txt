@@ -1,0 +1,73 @@
+   while ( ((v4 >> v5) & 1) == 0 )
+    {
+LABEL_9:
+      if ( v5-- == 0 )
+      {
+        if ( v6 )
+          input = v4;
+        goto LABEL_12;
+      }
+    }
+
+
+đoạn trên dịch phải v5 bit và and với 1 cho đến khi kết quả là 1
+
+v5 có giá trị chính là vị trí giá trị bit 1 đầu tiên của số nhập vào từ trái qua phải
+sau đó gán a[v5] cho giá trị nhập vào
+
+
+v5 khác 0 thì các số nhập vào phải khác nhau ( để xor khác 0)
+để tăng v7 lên thì v8 = a[v5] khác 0 thì v5 phải bằng index của một số đã nhập vào 
+
+a[9] = 0x35f
+a[10] = 0x4d2
+
+nếu số bit bằng index thì sẽ xor bit tại index với số nhập vào sau đó gán với v4
+
+4,0x24,0x7b,0x4d2
+
+
+để tới được chuỗi win thì ta phải nhập đủ 5 số
+số đầu tiên sẽ được gán ngay tại vị trí là số lượng bit của số đó trong mảng a
+số tiếp theo sẽ (phải có số lượng bit) bằng số lượng bit số thứ nhất , sau đó sẽ được xor với số thứ nhất
+kết quả sẽ được xét tiếp trong vòng lặp while đến khi gặp bit 1 từ giá trị v5 trước đó nếu a[v5] != 0 thì
+xor với vị trí này và tiếp tục xet vòng lặp while(--v5) cho đến khi v5 == 0
+kết quả sẽ được gán vào ô kết thúc khi a[v5] = 0 (v8=0)
+
+từ số thứ 3 thì v7 phải được cộng lên ít nhất 2 lần 
+    if ( v8 )
+    {
+      ++v7;
+      v4 ^= v8;
+      v6 = 1;
+      goto LABEL_9;
+    }
+
+nghĩa là đoạn này sẽ phải được thực hiện 2 lần trở lên, 
+
+thì vị trí bit 1 phải tương ứng với vị trí đã được lưu ở mảng a
+
+
+cuối cùng sau khi nhập được 5 số thì kết quả ở mảng a tổng phải bằng 0x40018038
+
+{214768030 + 214768037 + 214768038 + 214768039 + 214768040}
+0xccd199e +  0xccd19a5 + 0xccd19a6 + 0xccd19a7 + 0xccd19a8
+
+15 tại vị trí 3
+16 tại vị trí 4
+
+>>> 0x40018038
+1073840184
+>>> 0x40018000
+1073840128
+>>> 0x038
+
+
+
+
+1073840183 = 0x40018038 - 1
+1073840182
+1073840182
+1073840182
+1073840182
+Congrats!

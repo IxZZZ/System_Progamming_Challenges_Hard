@@ -1,0 +1,34 @@
+để winl_label được thực hiện thfi v56 phải bằng 1 thì đoạn 
+          v52 = (unsigned __int8)*v49 < (unsigned int)*v50;
+          if ( *v49 == *v50
+            && (v53 = v49[1], v52 = v53 < (unsigned int)v50[1], v53 == v50[1])
+            && (v54 = v49[2], v52 = v54 < (unsigned int)v50[2], v54 == v50[2])
+            && (v51 == -1 || (v55 = v49[3], v52 = v55 < (unsigned int)v50[3], v55 == v50[3])) )
+          {
+            v56 = 0;
+          }
+          else
+          {
+            v56 = v52 ? -1 : 1;
+          }
+
+đoạn else này phải thực hiện và v52 = 0
+v49<v50
+
+
+v6 trong call_to_win dòng 261 phải bằng 6
+
+
+switch
+compare 
+case 1,2,3,4,5: topit
+
+cout (0x6cd44978
+
+
+block: jmYJBjRBVB5wQ
+
+
+PASSWORD: stopit
+
+generate a file with random filename
