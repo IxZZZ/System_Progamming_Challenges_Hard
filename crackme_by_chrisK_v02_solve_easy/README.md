@@ -106,7 +106,19 @@ Tuy nhiên chúng ta không cần quan tâm, chỉ cần đặt breakpoint ngay 
 
 ![image](https://user-images.githubusercontent.com/31529599/124359469-629e4a00-dc4f-11eb-8df6-1abb25983a62.png)
 
-vậy chuỗi thứ 2 sẽ là `]e^\`c/^^be`
+Vậy chuỗi thứ 2 sẽ là ``]e^\`c/^^be``
 
+Tương ứng với chuỗi thứ nhất `aaaaa.aaaa`
+
+
+## Chạy chương trình với chuỗi vừa tìm được 
+
+```bash
+└─$ ./crackme_by_chrisK_v02.exe 
+Enter Password: aaaaa.aaaa
+Enter password key: ]e^`c/^^be
+Nice!!    
+```
+Xong !!!!
 
 
