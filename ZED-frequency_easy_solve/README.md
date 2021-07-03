@@ -134,7 +134,7 @@ print('result: ',res)
 ```
 ### Chạy script python 
 
-![image](https://user-images.githubusercontent.com/31529599/124358182-57482000-dc49-11eb-8d60-0ffae6f093b8.png)
+![image](https://user-images.githubusercontent.com/31529599/124358254-b017b880-dc49-11eb-97db-28f8372a86ee.png)
 
 Vậy chuỗi nhập vào sẽ là : `bccdddeeeefffffgggggghhhhhhhiiiiiiiijjjjjjjjjlmmnnnoooopppppqqqqqqrrrrrrrsssssssstttttttttvwwxxxyyyyzzzzz`
 
