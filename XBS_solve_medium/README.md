@@ -127,7 +127,28 @@ Sau khi tính giá trị của mảng `a` sau mỗi lần nhận thì chương t
 
   - `v10` có bằng `1` và `v3` có lớn hơn `1`, để chương trình không in ra chuổi `Try again` câu `if ( v10 && v3 > 1 )` phải sai, nghĩa là `v10` phải bằng không hoặc `v3` > `1`
 
-  => hai điều kiện trên phải trái ngược nhau khi `v3` (số lần nhập) , nên số lần nhập là từ 2 trở xuống (`v7<=1`) nghĩa là `v10 ==1` thì `v3` >
+      => hai điều kiện trên phải trái ngược nhau, khi `v3` số lần nhập là là 1,và 2 tương ưng với giá trị 0,1 thì điều kiện (`v3>1`) luôn sai nên sẽ không cần quan tâm tới điều kiện còn lại, Nếu `v3` số lần nhập là từ lần 3 trở đi (3,4,5) tương ứng với giá trị (2,3,4) thì điều kiện (`v3 > 1`) luôn đúng nên điều kiện còn lại (`v10`) phải bằng ko, mà `v10` sẽ bằng 0 khi `v7<=1` (ở trên thì `v7` được cộng lên khi mà câu lệnh `if ( v8 )` được thực hiện, nghĩa là từ lần nhập thứ 3 trở đi số lần thực hiện phép  `xor` trong mảng `a` phải ít nhất hai lần để `v7` > `1` và dẫn đến `v10` bằng `0`
+  
+  - sau khi đã nhập đủ `5` số và mảng `a` được xác định thì chương trình sẽ thực hiện vòng `while ( v11 != &a[31] );` để tính tổng các phần tử trong mảng `a`, cuối cùng tổng này đem so sánh với `0x40018038` nếu bằng nhau sẽ in ra chuỗi `Congrats`
+  
+  
+  Tổng kết: 
+  - Chương trình yêu cầu chúng ta nhập vào `5` số trong đó số tiếp theo sẽ phụ thuộc vào những số đã nhập trước đó
+  - Sau đó thực hiện tìm vị trí bit `1` đầu tiền từ trái sang phải của giá trị nhập vào , lấy ra giá trị này ở trong mảng `a` nếu khác không sẽ đem `xor` với giá trị nhập vào , tiếp tục lặp để tìm vị trí bit `1` tiếp theo của số nhập vào, nếu vị trí này tiếp tục khác `0` thì sẽ tiếp tục `xor` thực hiện như trên, nếu vị trí khác `0` thì sẽ lưu kết quả phép `xor` vào vị trí này.
+  - từ số thứ 3 nhập vào, chương trình sẽ kiểm tra số lần thực hiện phép `xor` ít nhất `2` lần, nghĩa là vị trí bit `1` của số nhập vào phải tương ứng với vị trí phần tử của mảng đã được lưu ở lần nhập trước đó, để được `xor` ít nhất `2` lần
+  - cuối cùng sau khi nhập xong, sẽ so sánh tổng mảng `a` với `0x40018038`
 
+Ở bài này, mình tận dụng tính chất hai số lệch nhau một đơn vị của một số sẽ có một số `xor` với số này sẽ bằng `1`, ví dụ (`5^4 = 1` và `5^6 = 3`)
 
+Từ ý tưởng trên, ta có tổng mà ta muốn sẽ là `0x40018038` = `1073840184`, và để tận dụng được tính chất `xor` thì mảng `a` kết quả sẽ có hai phần tử là `1073840183` và `1` để tổng là kết quả cần tìm, và ta có `1073840183^1073840182 = 1` và do hai số này lệch nhau chỉ `1` đơn vị nên vị trí bit `1` đầu tiên sẽ như nhau, có nghĩa là:
+
+- số đầu tiên nhập là `1073840183` vị trí bit `1` đầu tên sẽ là `31`, và số này được lưu ở vị trí `31` trong mảng `a`
+- số thứ hai nhập là  `1073840182` vị trí bit `1` đầu tên cũng sẽ là `31` và số này sẽ được xor với số đầu tiên nhập vào và kết quả sẽ ra một và được lưu ở vị trí `1` trong mảng `a`
+- số thứ 3,4,5 cũng sẽ là `1073840182` để cùng `xor` với giá trị đầu tiên nhập vào và kết quả ra `1` sẽ được `xor` với số tại vị trí `1` mà số này có giá trị `1` từ lần nhập thứ hai nên kết quả sẽ bằng `0` (`1^1`) nên sẽ không có lưu số nào mới từ lần nhập thứ `3` => không ảnh hưởng đến tổng mà ta muốn.
+
+## Chạy chương trình với kết quả vừa tìm được
+
+![image](https://user-images.githubusercontent.com/31529599/124370987-72e21380-dca7-11eb-8b1a-d92179dec7ad.png)
+
+Xong !!!
 
