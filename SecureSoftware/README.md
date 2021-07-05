@@ -69,6 +69,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 Ta thấy, ở bài này sử dụng 2 loại anti debugger đó là :
 - `IsDebuggerPresent()` để kiểm tra debug 
 - và, dùng thread điểm kiểm tra, trong hàm `StartAddress`, hàm này dùng thời gian để kiểm tra debug (khi debug thì thời gian sẽ không thể nào nhanh khi thực thi chương trình được)
+
 ![image](https://user-images.githubusercontent.com/31529599/124410207-2f091000-dd74-11eb-8788-d58114b776a0.png)
 
 Tuy nhiên , bài này trong file `Readme.txt` cũng cho phép sử dụng `anti patching & debugging` nên mình đã sử dụng plugin `Patcher` trong IDA pro để patch lại chương trình ( thành lệnh `nop`)  để bypass anti debug
@@ -122,14 +123,17 @@ Sơ lược về flow của hàm `main` (mình chỉ phân tích những hàm m�
   -  `-i` sẽ gọi hàm `initialize_function` -> hàm này dùng để nhập key và khởi tạp file authentication
   -  `-u` sẽ gọi hàm `undo_function` -> hàm này dùng để undo tất cả các bước đã thực hiện ở trên hệ thống bằng tham số `-i`
   -  Nếu tham số truyền vào không nằm trong hai tham số trên, thì sẽ gọi `MessageBox` in ra dòng trong `Text`, tuy nhiên thì như mình đã phân tích và đổi tên một hàm ngay trước khi gọi `MessageBox` là hàm `calculate_TEXT_to_output`, hàm này sẽ lấy tham số là một chuỗi trong section `.data` sau đó thực hiện duyệt chuỗi này , mỗi phần tử sẽ trừ đi một đơn vị và truyền vào TEXT
+  
   ![image](https://user-images.githubusercontent.com/31529599/124411689-37af1580-dd77-11eb-88ff-2e497a03550d.png)
   
   ![image](https://user-images.githubusercontent.com/31529599/124411719-4990b880-dd77-11eb-811e-480ba8874b31.png)
   
   Mình đã thử viết đoạn code python để tính chuỗi tại vị trí truyền vào này sẽ có kết quả là :
+  
   ![image](https://user-images.githubusercontent.com/31529599/124411809-6fb65880-dd77-11eb-9c5b-57621698e16e.png)
   Vậy đây là `MessageBox` show khi truyền vào tham số không xác định
 - Nếu không truyền vào tham số thì chương trình sẽ gọi vào `Error_Function`, hàm này sẽ gọi `MessageBox` và in ra chuỗi lỗi bằng cách đã được phân tích ở trên, và đặc biệt ở đây sẽ gọi `WaitForSingleObject` cho hàm handle và thread của hàm handle là hàm `check_key` nên mình thử kiểm tra và biết được hàm này sẽ kiểm tra `authencication` file được tạo từ `initialize`, sẽ được phân tích ở dưới
+
 ![image](https://user-images.githubusercontent.com/31529599/124412072-eb180a00-dd77-11eb-8ffb-d67aecd16a4b.png)
 
 
@@ -245,6 +249,7 @@ void __cdecl check_key()
 ```
 
 Đầu tiên, cách để mình biết được đây là hàm dùng để check key như cái tên hàm mà mình đã đặt là vì mình xem chuỗi được truyền vào hàm `calculate_TEXT_to_output` (`off_40401C[0]`) để tính chuỗi `TEXT` được show bằng `MessageBox`, và kết quả:
+
 ![image](https://user-images.githubusercontent.com/31529599/124417840-46e89000-dd84-11eb-9a61-661f04b12445.png)
 
 ==> đây là chuỗi mà mình cần in ra, nên mình biết đây là hàm mình cần phân tích
@@ -277,7 +282,7 @@ tất cả các tên biến đã được mình đổi tên theo tính chất c�
 - `3.` biến `set_in_sub_401F18` sẽ được phân tích trong hàm `sub_401F18`
 - `4.` biến `set_0_in_sub_401F18` cũng tương tự như trên
 
-## Hàm sub_401F18
+### Hàm sub_401F18
 
 Pseudocode của hàm này:
 
@@ -366,5 +371,171 @@ Tiếp theo là hai dòng
 nếu `Buffer[12]` và `Buffer[62]` tương ứng với `UserName` và `PcName` khác `x` nghĩa là `file` này không phải được tạo ra từ quá trình `debug` thì sẽ set `1` (kết quả của hàm strcmp nếu khác sẽ là -1 hoặc +1) cho biến `set_in_sub_401F18` => điều kiện `3` 
 
 Tiếp theo sẽ là :
+
 ![image](https://user-images.githubusercontent.com/31529599/124419970-c710f480-dd88-11eb-89b9-b4652f690073.png)
+
+Với ` Str = &Buffer[112];` là vị trí mà key nhập vào , sẽ được duyệt trong vòng `for`
+
+`Str` này sẽ được thay đổi trong hàm `sub_401D0C((int)Buffer);`
+
+Mà mục đích của chúng ta muốn sẽ là `set_0_in_sub_401F18 = 0;` trong câu block `else của if ( v7 == 1 )` nghĩa là `v7 != 1` nên vòng `for` sẽ không được set `v7 = 1`, nên `Str` sau khi được xử lí thông qua hàm `sub_401D0C` tất cả các ký tự phải bằng `-1` 
+
+
+#### Hàm Sub_401D0C
+
+Pseudocode của hàm `Sub_401D0C`
+
+```c
+int __cdecl sub_401D0C(char (*a1)[219])
+{
+  int result; // eax
+  _BOOL2 v2; // ax
+  int v3; // [esp+10h] [ebp-28h]
+  signed int v4; // [esp+14h] [ebp-24h]
+  char *String; // [esp+18h] [ebp-20h]
+  signed int v6; // [esp+1Ch] [ebp-1Ch]
+  signed int v7; // [esp+20h] [ebp-18h]
+  int k; // [esp+24h] [ebp-14h]
+  signed int j; // [esp+28h] [ebp-10h]
+  signed int i; // [esp+2Ch] [ebp-Ch]
+
+  result = (unsigned __int16)set_in_sub_401F18;
+  if ( set_in_sub_401F18 )
+  {
+    v2 = !strcmp(&(*a1)[12], UserName) && !strcmp(&(*a1)[62], PCname);
+    set_in_sub_401F18 = v2;
+    v7 = strlen(UserName);
+    v6 = strlen(PCname);
+    String = &(*a1)[112];
+    result = (unsigned __int16)set_in_sub_401F18;
+    if ( set_in_sub_401F18 == 1 )
+    {
+      result = dword_404040;
+      if ( !dword_404040 )
+      {
+        if ( dword_407040 == 5 )
+          strrev(String);
+        v4 = strlen(String);
+        for ( i = 0; i < v7; ++i )
+          UserName[i] %= 16;
+        for ( j = 0; j < v6; ++j )
+          PCname[j] %= 16;
+        for ( k = 0; ; ++k )
+        {
+          result = k;
+          if ( k >= v4 )
+            break;
+          v3 = sub_402190((unsigned __int8)String[k]);
+          if ( k >= v6 )
+          {
+            if ( k >= v7 + v6 )
+            {
+              String[k] = 0;
+            }
+            else if ( v3 == UserName[v7 - (k - v6) - 1] )
+            {
+              String[k] = -1;
+            }
+            else
+            {
+              String[k] = 0;
+            }
+          }
+          else if ( v3 == PCname[v6 - k - 1] )
+          {
+            String[k] = -1;
+          }
+          else
+          {
+            String[k] = 0;
+          }
+        }
+      }
+    }
+  }
+  return result;
+}
+```
+
+giá trị của biến `Str` hay chuỗi nhập vào trong hàm này sẽ là biến `String`
+
+Mình sẽ chỉ phân tích những phần chính trong hàm này:
+
+![image](https://user-images.githubusercontent.com/31529599/124434332-f3833b80-dd9d-11eb-8a75-547bba5e2e23.png)
+
+đoạn này sẽ lấy từng ký tự trong `UserName` và `PcName` chia lấy dư cho `16`
+
+![image](https://user-images.githubusercontent.com/31529599/124434438-144b9100-dd9e-11eb-9771-53dc98aabbbc.png)
+
+sau đó truyền từ ký tự của `String` vào trong hàm `sub_402190`
+
+Pseudocode hàm `sub_402190`
+
+hàm này chủ yếu sẽ chuyển ký tự từ `0 -> 9` và từ `A -> F` thành cách số từ `0 -> 16` nếu không nằm trong các giá trị trên thì sẽ trả về `-1`
+
+```c
+int __cdecl sub_402190(unsigned __int8 a1)
+{
+  int v2; // [esp+10h] [ebp-4h]
+
+  if ( a1 > 'F' )
+    return -1;
+  v2 = a1 - '0';
+  if ( v2 > 9 )
+    v2 = a1 - '7';
+  return v2;
+}
+```
+
+giá trị của `v3` được trả về từ hàm trên sẽ đem đi so sánh với mảng `UserName` và `PcName` sau khi được chia lấy dư cho `16`, nếu thõa sẽ set các ký tư trong `String` về thành `-1`, nếu không thõa sẽ set thành `0`
+
+![image](https://user-images.githubusercontent.com/31529599/124434999-ba979680-dd9e-11eb-9007-afcde65a00c4.png)
+
+Ở đây ta thấy hai câu `else if` sẽ kiểm tra `v3`
+
+` else if ( v3 == UserName[v7 - (k - v6) - 1] )` và `else if ( v3 == PCname[v6 - k - 1] )`
+
+Với `v7` và `v6` là length của `UserName` và `PCname`, thì cách lấy các ký tự này là lấy ngược từ cuối mảng đến đầu mảng, kết hợp với đoạn sau ở trên:
+
+![image](https://user-images.githubusercontent.com/31529599/124435160-e581ea80-dd9e-11eb-8307-4202dd8d9393.png)
+
+Thì ta biết ở đây sẽ so sánh từ cuối chuỗi đến đầu chuỗi.
+
+Vậy đoạn Key mà chúng ta nhập vào sẽ là `UserName+PcName` mà mỗi phần tử là phần chia lấy dư của `16`
+
+cụ thể trong máy mình:
+- `UserName` = `ixz`
+- `PcName` = `DESKTOP-6LQVP4S`
+
+### Viết đoạn script python để tính ra key nhập vào từ hai chuỗi trên 
+
+```python 
+import socket
+import getpass
+
+# get username
+username = getpass.getuser()
+
+# get pc name
+pcname = socket.gethostname()
+
+print('Username: ',username)
+print('PcName: ',pcname)
+
+# Generate key from username and pcname
+for i in (username+pcname):
+    hex_value = ord(i)%16
+    print(hex(hex_value)[2:].upper(),end='')
+```
+
+### Chạy Script python
+
+![image](https://user-images.githubusercontent.com/31529599/124436365-1151a000-dda0-11eb-981d-b4469f631269.png)
+
+
+## Chạy chương trình với kết quả vừa tìm được 
+
+![image](https://user-images.githubusercontent.com/31529599/124436455-2c241480-dda0-11eb-9c52-fbcebd816c6f.png)
+
+Xong !!!
 
