@@ -1,8 +1,7 @@
 # System_Progamming_Challenges_Hard
 | time | Challenges | exploit |
 | ------ | --------------------------- | ------------------------------- |
-| 20m | [Catalina](Catalina_solve_easy/README.md)
- | rev |
+| 20m | [Catalina](Catalina_solve_easy/README.md)| rev |
 | 30m | [ZED-frequency](ZED-frequency_easy_solve/README.md) | rev |
 | 30m | [fence](fence_solve_easy/README.md) | rev |
 | 40m | [creackme_by_chrisK_v02](crackme_by_chrisK_v02_solve_easy/README.md) | rev |
