@@ -8,6 +8,6 @@
 | 2h | [recursive](recursive_solve_medium/README.md) | rev |
 | 3h | [XBS](XBS_solve_medium/README.md) | rev |
 | 12h | [Exceptional Password](Exceptional_Password_hard/README.md) | rev |
-| 12h | [SecureSoftware](SecureSoftware/README.md) | rev |
+| 12h | [SecureSoftware](SecureSoftware_hard/README.md) | rev |
 | 15h | [firewall](firewall_hard/README.md) | rev |
 | 3d | [BabyVm](BabyVm/README.md) | rev |
