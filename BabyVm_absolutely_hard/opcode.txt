@@ -1,0 +1,62 @@
+mov reg val
+mov reg reg
+mov reg[mem]
+mov[reg] val
+mov reg[reg]
+mov[mem] val
+mov[mem] reg
+push val
+push reg
+push[reg]
+pop reg
+pop[reg]
+pop[mem]
+add reg reg
+add reg val
+add reg[mem]
+add[reg] val
+add[reg] reg
+sub reg reg
+sub reg val
+sub reg[mem]
+sub[reg] val
+sub[reg] reg
+mul reg reg
+mul reg val
+mul reg[mem]
+mul[reg] val
+mul[reg] reg
+xor reg reg
+xor reg val
+xor reg[mem]
+xor[reg] val
+xor[reg] reg
+and reg reg
+and reg val
+and reg[mem]
+and [reg] val
+and [reg] reg
+nop
+nop
+nop
+nop
+nop
+not reg
+not [reg]
+not [mem]
+cmp reg reg
+cmp reg val
+cmp reg[mem]
+cmp[reg] val
+nop
+loop back
+label address to jump
+set 0 loop back address
+jmp
+jmp label
+jz return address
+jz label
+jnz return address
+jnz label
+putchar reg
+getchar

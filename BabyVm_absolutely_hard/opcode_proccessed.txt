@@ -1,0 +1,63 @@
+Case 0 -> mov_reg_val
+Case 1 -> mov_reg_reg
+Case 2 -> mov_reg[mem]
+Case 3 -> mov[reg] val
+Case 4 -> mov_reg[reg]
+Case 5 -> mov[mem] val
+Case 6 -> mov[mem] reg
+Case 7 -> push_val
+Case 8 -> push_reg
+Case 9 -> push[reg]
+Case 10 -> pop_reg
+Case 11 -> pop[reg]
+Case 12 -> pop[mem]
+Case 13 -> add_reg_reg
+Case 14 -> add_reg_val
+Case 15 -> add_reg[mem]
+Case 16 -> add[reg] val
+Case 17 -> add[reg] reg
+Case 18 -> sub_reg_reg
+Case 19 -> sub_reg_val
+Case 20 -> sub_reg[mem]
+Case 21 -> sub[reg] val
+Case 22 -> sub[reg] reg
+Case 23 -> mul_reg_reg
+Case 24 -> mul_reg_val
+Case 25 -> mul_reg[mem]
+Case 26 -> mul[reg] val
+Case 27 -> mul[reg] reg
+Case 28 -> xor_reg_reg
+Case 29 -> xor_reg_val
+Case 30 -> xor_reg[mem]
+Case 31 -> xor[reg] val
+Case 32 -> xor[reg] reg
+Case 33 -> and_reg_reg
+Case 34 -> and_reg_val
+Case 35 -> and_reg[mem]
+Case 36 -> and [reg] val
+Case 37 -> and [reg] reg
+Case 38 -> nop
+Case 39 -> nop
+Case 40 -> nop
+Case 41 -> nop
+Case 42 -> nop
+Case 43 -> not_reg
+Case 44 -> not [reg]
+Case 45 -> not [mem]
+Case 46 -> cmp_reg_reg
+Case 47 -> cmp_reg_val
+Case 48 -> cmp_reg[mem]
+Case 49 -> cmp[reg] val
+Case 50 -> nop
+Case 51 -> loop_back
+Case 52 -> label_address_to_jump
+Case 53 -> set 0 loop_back_address
+Case 54 -> jmp
+Case 55 -> jmp_label
+Case 56 -> jz_return_address
+Case 57 -> jz_label
+Case 58 -> jnz_return_address
+Case 59 -> jnz_label
+Case 60 -> putchar_reg
+Case 61 -> getchar
+Case 62 -> 
