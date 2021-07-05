@@ -381,20 +381,239 @@ unsigned __int8 __thiscall main_switch_case(_DWORD *this, _BYTE *a1)
 Tổng kết switch case:
 
 ```
-case 0 -> mov_reg_val
-case 1 -> mov_reg_[mem]
-case 2 -> mov_[reg]_val
-case 3 -> mov_reg_[reg]
-case 4 -> mov_[mem]_val
-case 5 -> mov_[mem]_reg
-case 6 -> push
-case 7 -> push
-case 8 -> push
-case 9 -> pop
-case 10 -> pop 
-case 11 -> pop
-case 12 -> add_reg_reg
-case 13 -> add_reg_val
-case 14 -> add_reg_[mem]
+Case 0 -> mov_reg_val
+Case 1 -> mov_reg_reg
+Case 2 -> mov_reg[mem]
+Case 3 -> mov[reg] val
+Case 4 -> mov_reg[reg]
+Case 5 -> mov[mem] val
+Case 6 -> mov[mem] reg
+Case 7 -> push 
+Case 8 -> push 
+Case 9 -> push 
+Case 10 -> pop 
+Case 11 -> pop
+Case 12 -> pop 
+Case 13 -> add_reg_reg
+Case 14 -> add_reg_val
+Case 15 -> add_reg[mem]
+Case 16 -> add[reg] val
+Case 17 -> add[reg] reg
+Case 18 -> sub_reg_reg
+Case 19 -> sub_reg_val
+Case 20 -> sub_reg[mem]
+Case 21 -> sub[reg] val
+Case 22 -> sub[reg] reg
+Case 23 -> mul_reg_reg
+Case 24 -> mul_reg_val
+Case 25 -> mul_reg[mem]
+Case 26 -> mul[reg] val
+Case 27 -> mul[reg] reg
+Case 28 -> xor_reg_reg
+Case 29 -> xor_reg_val
+Case 30 -> xor_reg[mem]
+Case 31 -> xor[reg] val
+Case 32 -> xor[reg] reg
+Case 33 -> and_reg_reg
+Case 34 -> and_reg_val
+Case 35 -> and_reg[mem]
+Case 36 -> and [reg] val
+Case 37 -> and [reg] reg
+Case 38 -> nop
+Case 39 -> nop
+Case 40 -> nop
+Case 41 -> nop
+Case 42 -> nop
+Case 43 -> not_reg
+Case 44 -> not [reg]
+Case 45 -> not [mem]
+Case 46 -> cmp_reg_reg
+Case 47 -> cmp_reg_val
+Case 48 -> cmp_reg[mem]
+Case 49 -> cmp[reg] val
+Case 50 -> nop
+Case 51 -> loop_back (thực hiện lặp lại instruction hiện tại và lưu lại giá trị của instruction sau khi thoát vòng lặp bằng cách gán this[13] = this[12] )
+Case 52 -> label_address_to_jump ( thực hiện thiết lập một label có vị trí để nhảy tới tại this[14] = this[12] + 12 * this[4]
+Case 53 -> set_0_loop_back_address ( set loopback address bằng 0 , this[13] = 0)
+Case 54 -> jmp (nhảy tới địa chỉ loopback this[12]=this[13])
+Case 55 -> jmp_label (nhảy tới label label[12]=label[14])
+Case 56 -> jz_return_address 
+Case 57 -> jz_label 
+Case 58 -> jnz_return_address 
+Case 59 -> jnz_label
+Case 60 -> putchar_reg
+Case 61 -> getchar
+
 ```
+
+hai hàm `push` và `pop` khá là phức tạp nên vì chỉ còn hai hàm này mình đã đoán nó là `push` và `pop`, và thử lần lượt
+
+
+
+### Script python 
+
+Từ những `case` switch phần tích được ở trên, ta sẽ viết một đoạn script python để build lại code assembly cho chương trình
+
+```python
+file = open('vm_dump.vm', mode="rb")
+
+file_content = file.read()
+
+
+instructions = ['mov_reg_val', 'mov_reg_reg', 'mov_reg[mem]', 'mov[reg] val', 'mov_reg[reg]', 'mov[mem] val', 'mov[mem] reg', 'push_val', 'push_reg', 'push[reg]', 'pop_reg', 'pop[reg]', 'pop[mem]', 'add_reg_reg', 'add_reg_val', 'add_reg[mem]', 'add[reg] val', 'add[reg] reg', 'sub_reg_reg', 'sub_reg_val', 'sub_reg[mem]', 'sub[reg] val', 'sub[reg] reg', 'mul_reg_reg', 'mul_reg_val', 'mul_reg[mem]', 'mul[reg] val', 'mul[reg] reg', 'xor_reg_reg', 'xor_reg_val',
+                'xor_reg[mem]', 'xor[reg] val', 'xor[reg] reg', 'and_reg_reg', 'and_reg_val', 'and_reg[mem]', 'and [reg] val', 'and [reg] reg', 'nop', 'nop', 'nop', 'nop', 'nop', 'not_reg', 'not [reg]', 'not [mem]', 'cmp_reg_reg', 'cmp_reg_val', 'cmp_reg[mem]', 'cmp[reg] val', 'nop', 'loop_back', 'label_address_to_jump', 'set 0 loop_back_address', 'jmp', 'jmp_label', 'jz_return_address', 'jz_label', 'jnz_return_address', 'jnz_label', 'putchar_reg', 'getchar','nop']
+
+print('Length instrcutions: ', len(instructions))
+for offset in range(8,len(file_content),12):
+    if(offset < len(file_content)):
+
+        bytes_0 = file_content[offset]
+        if bytes_0<len(instructions):
+            if instructions[bytes_0] != 'nop':
+                bytes_4_8 = file_content[offset+4:offset+8]
+                bytes_8_12 = file_content[offset+8:offset+12]
+
+                bytes_4_8 = int.from_bytes(
+                    bytes_4_8, byteorder='little', signed=False)
+                bytes_8_12 = int.from_bytes(
+                    bytes_8_12, byteorder='little', signed=False)
+
+                print(instructions[bytes_0], bytes_4_8, bytes_8_12)
+
+```
+
+### Chạy script python 
+
+```
+push_val 2 0
+push_val 17 0
+push_val 88 0
+push_val 78 0
+push_val 83 0
+push_val 75 0
+push_val 79 0
+push_val 79 0
+push_val 93 0
+push_val 76 0
+mov_reg_val 0 10
+mov_reg_val 1 60
+loop_back 0 0
+pop_reg 2 0
+xor_reg_reg 2 1
+putchar_reg 2 0
+sub_reg_val 0 1
+cmp_reg_val 0 0
+jnz_return_address 0 0
+set 0 loop_back_address 0 0
+push_val 141 0
+push_val 222 0
+push_val 159 0
+push_val 199 0
+push_val 207 0
+push_val 152 0
+push_val 222 0
+push_val 207 0
+push_val 243 0
+push_val 220 0
+push_val 156 0
+push_val 216 0
+push_val 243 0
+push_val 193 0
+push_val 152 0
+push_val 243 0
+push_val 197 0
+mov_reg_val 0 17
+push_reg 0 0
+loop_back 0 0
+getchar 0 0
+sub_reg_val 0 1
+cmp_reg_val 0 0
+jnz_return_address 0 0
+label_address_to_jump 16 0
+set 0 loop_back_address 0 0
+pop_reg 0 0
+mov_reg_val 1 0
+loop_back 0 0
+mov_reg[reg] 2 1
+xor_reg_val 2 172
+pop_reg 3 0
+cmp_reg_reg 3 2
+jnz_label 0 0
+add_reg_val 1 1
+sub_reg_val 0 1
+cmp_reg_val 0 0
+jnz_return_address 0 0
+label_address_to_jump 4 0
+jmp_label 0 0
+push_val 49 0
+push_val 54 0
+push_val 70 0
+push_val 8 0
+push_val 86 0
+push_val 100 0
+push_val 8 0
+push_val 14 0
+push_val 73 0
+push_val 8 0
+push_val 77 0
+push_val 8 0
+push_val 73 0
+push_val 100 0
+push_val 12 0
+push_val 85 0
+push_val 11 0
+push_val 95 0
+push_val 100 0
+push_val 8 0
+push_val 126 0
+push_val 15 0
+push_val 8 0
+push_val 10 0
+push_val 75 0
+push_val 64 0
+push_val 121 0
+push_val 115 0
+push_val 104 0
+push_val 5 0
+push_val 22 0
+push_val 92 0
+push_val 90 0
+push_val 87 0
+push_val 93 0
+mov_reg_val 0 35
+mov_reg_val 1 59
+loop_back 0 0
+pop_reg 2 0
+xor_reg_reg 2 1
+putchar_reg 2 0
+sub_reg_val 0 1
+cmp_reg_val 0 0
+jnz_return_address 0 0
+set 0 loop_back_address 0 0
+```
+
+từ đây mình sẽ sơ lược qua luông của chương trình từ đoạn asm trên: 
+- Đầu tiên chương trình sẽ `push` lần lược các giá trị `2,17,88,78,83,75,79,79,93,76`, sau đó dùng vòng lặp `loop_back` để `pop` giá trị này ra khỏi stack và `xor` với `60` sau đó gọi `putchar` in ra màn hình 
+
+![image](https://user-images.githubusercontent.com/31529599/124488967-abced500-ddda-11eb-9c11-0571b62ef411.png)
+
+Dùng đoạn code python này để xem giá trị của chuỗi in ra màn hình, chính là chuỗi yêu cầu nhập vào password (vì là stack nên thứ tự sẽ ngược lại)
+
+![image](https://user-images.githubusercontent.com/31529599/124489118-dc167380-ddda-11eb-9cad-b8fd41098ccd.png)
+
+- Ta thấy chuỗi tiếp theo cũng đươc `push` và stack
+- Tiếp theo là một đoạn loop_back để gọi hàm `get_char` nhập vào ký tự
+- ngay sau đó tiếp tục là một đoạn look_back, tuy nhiên đoạn này sẽ lấy giá trị `pop` ra từ stack của chuỗi nhập vào đem `xor` với `172` và so sánh với chuỗi được nhập vào 
+Dùng đoạn python trên tương tự với chuỗi này xor với 172
+
+![image](https://user-images.githubusercontent.com/31529599/124490161-fbfa6700-dddb-11eb-8cff-90485f71c8e5.png)
+
+được chuỗi `i_4m_t0p_cr4ck3r!` -> ta đoán chuỗi này là chuỗi cần tìm 
+
+## Nhập thử chuỗi 
+
+![image](https://user-images.githubusercontent.com/31529599/124490336-2a784200-dddc-11eb-9350-fc47eb6e5cdb.png)
+
+Vậy chuỗi nhập vào đã đúng và flag là `SHB{p134E3_d0n7_r3v3r53_m3}`
+
 
