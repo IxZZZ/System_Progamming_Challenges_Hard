@@ -72,7 +72,7 @@ _DWORD *__thiscall sub_2E3820(_DWORD *this)
 }
 ```
 
-Hàm này dễ đọc mỗi offset `12` bytes trong `Buffer` bắt đầu từ `bytes thứ 8` sau đó truyền vào hàm `main_switch_case`
+Hàm này sẽ đọc mỗi offset `12` bytes trong `Buffer` bắt đầu từ `bytes thứ 8` sau đó truyền vào hàm `main_switch_case`
 
 ```c
 unsigned __int8 __thiscall main_switch_case(_DWORD *this, _BYTE *a1)
