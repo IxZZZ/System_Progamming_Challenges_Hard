@@ -274,7 +274,7 @@ Từ ý tưởng của `Case` đầu tiên, mình tiến hành phân tích tươ
 Đây là hàm `main_switch_case` sau khi đã được phân tích và đổi tên
 
 
-```
+```c
 unsigned __int8 __thiscall main_switch_case(_DWORD *this, _BYTE *a1)
 {
   unsigned __int8 result; // al
